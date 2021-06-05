@@ -6,26 +6,27 @@ from django.views import defaults as default_views
 from django.views.generic import TemplateView
 from rest_framework.authtoken.views import obtain_auth_token
 
+
+admin.site.site_header = 'Streakify Admin'
+
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
     path(
         "about/", TemplateView.as_view(template_name="pages/about.html"), name="about"
     ),
+    
     # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
+    
     # User management
-    path("users/", include("streakify.users.urls", namespace="users")),
+    path("api/v1/users/", include("streakify.users.urls", namespace="users")),
     path("accounts/", include("allauth.urls")),
-    # Your stuff: custom urls includes go here
+    
+    # Custom urls
+    path("api/v1/", include("streakify.auth.urls", namespace="auth")),
+
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# API URLS
-urlpatterns += [
-    # API base url
-    path("api/", include("config.api_router")),
-    # DRF auth token
-    path("auth-token/", obtain_auth_token),
-]
 
 if settings.DEBUG:
     # This allows the error pages to be debugged during development, just visit
