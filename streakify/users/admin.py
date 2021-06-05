@@ -1,8 +1,12 @@
 from django.contrib import admin
+# Django imports
 from django.contrib.auth import admin as auth_admin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+
+# Third party imports
 from simple_history.admin import SimpleHistoryAdmin
+
 
 User = get_user_model()
 

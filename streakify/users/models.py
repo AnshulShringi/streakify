@@ -1,9 +1,13 @@
+# Django imports
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.validators import UnicodeUsernameValidator
+
+# Local imports
 from .managers import CustomUserManager
+
 
 class User(AbstractUser):
     """Default user for Streakify."""
