@@ -23,7 +23,8 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     
     # Custom urls
-    # path("api/v1/streaks", include("streakify.streaks.urls", namespace="streaks")),
+    path("api/v1/streaks", include("streakify.streaks.urls", namespace="streaks")),
+    path("api/v1/friends", include("streakify.friends.urls", namespace="friends")),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
