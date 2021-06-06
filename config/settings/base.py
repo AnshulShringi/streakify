@@ -2,7 +2,7 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
-
+from datetime import timedelta
 import environ
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
@@ -75,11 +75,13 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "corsheaders",
+    'simple_history',
 ]
 
 LOCAL_APPS = [
     "streakify.users.apps.UsersConfig",
-    # Your stuff: custom apps go here
+    "streakify.streaks.apps.StreaksConfig",
+    "streakify.friends.apps.FriendsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -299,8 +301,7 @@ SOCIALACCOUNT_ADAPTER = "streakify.users.adapters.SocialAccountAdapter"
 # django-rest-framework - https://www.django-rest-framework.org/api-guide/settings/
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
 }
@@ -309,3 +310,8 @@ REST_FRAMEWORK = {
 CORS_URLS_REGEX = r"^/api/.*$"
 # Your stuff...
 # ------------------------------------------------------------------------------
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=180),
+}

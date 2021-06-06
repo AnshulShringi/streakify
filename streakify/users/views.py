@@ -4,6 +4,9 @@ from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView, RedirectView, UpdateView
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
 User = get_user_model()
 
@@ -43,3 +46,9 @@ class UserRedirectView(LoginRequiredMixin, RedirectView):
 
 
 user_redirect_view = UserRedirectView.as_view()
+
+
+class UpdateUserProfile(APIView):
+    def patch(self, request):
+        content = {'message': 'Hello, GeeksforGeeks'}
+        return Response(content)
