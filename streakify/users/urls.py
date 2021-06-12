@@ -1,6 +1,6 @@
 # Django imports
 from django.urls import path
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView 
+from rest_framework_simplejwt.views import TokenRefreshView 
 
 # Local imports
 from streakify.users.views import *
@@ -8,7 +8,7 @@ from streakify.users.views import *
 
 app_name = "users"
 urlpatterns = [
-    path('get-token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path("get-token/", GetTokenView.as_view(), name='token_obtain'),
     path('refresh-token/', TokenRefreshView.as_view(), name='token_refresh'),
     path("update-user-profile/", view=UpdateUserProfile.as_view(), name="update-user-profile"),
     path("~redirect/", view=user_redirect_view, name="redirect"),
