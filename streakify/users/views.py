@@ -13,9 +13,9 @@ class GetTokenView(APIView):
     permission_classes = [AllowAny]
 
     def post(self,request):
-        token = request.data.get("token") if "token" in request.data else None
+        token = request.data.get("firebase_token") if "firebase_token" in request.data else None
         mobile_number = request.data.get("mobile_number") if "mobile_number" in request.data else None
-        country_code = request.data.get("token") if "token" in request.data else None
+        country_code = request.data.get("country_code") if "country_code" in request.data else None
         status = "success"
         message = "User verified successfully !"
         body = {}
@@ -35,8 +35,8 @@ class GetTokenView(APIView):
                 message = "Firebase Token expired !" 
             if user:
                 refresh_token = RefreshToken.for_user(user)
-                body["refresh"] = str(refresh_token)
-                body["access"] = str(refresh_token.access_token)
+                body["refresh_token"] = str(refresh_token)
+                body["access_token"] = str(refresh_token.access_token)
 
         else:
             status = "error"
