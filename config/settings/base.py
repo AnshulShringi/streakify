@@ -80,6 +80,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    "streakify.core.apps.CoreConfig",
     "streakify.users.apps.UsersConfig",
     "streakify.streaks.apps.StreaksConfig",
     "streakify.friends.apps.FriendsConfig",
