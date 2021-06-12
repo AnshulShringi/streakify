@@ -1,3 +1,3 @@
 from django.contrib import admin
-
-# Register your models here.
+from simple_history.admin import SimpleHistoryAdmin
+from streaks.models import Streak, StreakRecord

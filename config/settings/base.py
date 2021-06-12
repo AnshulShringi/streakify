@@ -4,6 +4,7 @@ Base settings to build other settings files upon.
 from pathlib import Path
 from datetime import timedelta
 import environ
+import firebase_admin
 
 ROOT_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 # streakify/
@@ -315,3 +316,5 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=180),
 }
+
+firebase_app = firebase_admin.initialize_app()
