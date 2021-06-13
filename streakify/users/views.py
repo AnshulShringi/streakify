@@ -49,3 +49,8 @@ class GetTokenView(APIView):
             "body": body,
             "message": message
         })
+
+class TestView(APIView):
+	def get(self,req):
+		print("Hello")
+		return Response({})
