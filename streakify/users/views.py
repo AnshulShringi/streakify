@@ -70,3 +70,9 @@ class RefreshTokenView(TokenObtainPairView):
             "body":serializer.validated_data,
             "message":"Token refreshed successfully"
         })
+
+
+class TestView(APIView):
+	def get(self,request):
+		print("Test url called")
+		return Response({"Working fine"})
