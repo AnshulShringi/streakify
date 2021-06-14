@@ -5,6 +5,7 @@ from django.utils.translation import ugettext_lazy as _
 from .managers import StatusMixinManager
 from .utils import create_slug
 from .validators import validator_ascii
+from django.core.validators import RegexValidator
 
 
 class StatusMixin(models.Model):
@@ -65,7 +66,7 @@ class SlugMixin(models.Model):
         abstract = True
 
 
-upload_location=""
+upload_location="/images"
 
 
 class ImageMixin(models.Model):
@@ -78,3 +79,25 @@ class ImageMixin(models.Model):
 
     class Meta:
         abstract = True
+
+
+class MobileMixin(models.Model):
+    regex = RegexValidator(regex=r"^[1-9]\d{9}$", message="Invalid Mobile Number")
+    mobile_number = models.CharField(
+        _("mobile number"),
+        validators=[regex],
+        blank=False,
+        null=False,
+        max_length=10,
+        help_text="Enter a valid 10 digit mobile number.",
+    )
+    country = models.ForeignKey("core.Country", on_delete=models.CASCADE, blank=False, null=False)
+    verified = models.BooleanField(verbose_name=_("verified"), default=False)
+
+    class Meta:
+        abstract = True
+        unique_together = ('country_code', 'mobile')
+
+    @property
+    def get_phone(self):
+        return "%s%s" % (self.country.country_code, self.mobile)

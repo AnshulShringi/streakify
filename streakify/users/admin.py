@@ -31,7 +31,7 @@ class UserAdmin(auth_admin.UserAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     model = UserProfile
-    list_display = ["id", "user", "mobile"]
+    list_display = ["id", "user", "country", "mobile_number"]
     search_fields = UserSearchFields
     get_queryset = optimized_queryset
 
