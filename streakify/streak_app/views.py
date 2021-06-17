@@ -3,6 +3,8 @@ from rest_framework.views import APIView
 from streakify.streak_app.models import Streak, StreakRecord
 from streakify.streak_app.serializers import StreakCreateSerializer, StreakListSerializer, StreakDetailSerializer
 from rest_framework.generics import ListAPIView
+from rest_framework import status
+from streakify.users.models import *
 
 
 class StreakListView(ListAPIView):
@@ -16,10 +18,9 @@ class StreakListView(ListAPIView):
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
         serializer = self.get_serializer(queryset, many=True)
-        return Response({ 
-            "status":"success", 
+        return Response({  
             "body":serializer.data, 
-            "message":"Data retrieved successfully" 
+            "detail":"Data retrieved successfully" 
         })
 
 
@@ -28,18 +29,18 @@ class StreakCreateView(APIView):
     serializer_class = StreakCreateSerializer
     
     def post(self, request, *args, **kwargs):
-        friends = request.data.pop("")
+        user_ids = request.data.pop("user_ids") if "user_ids" in request.data else None
+        user_ids = user_ids.split(",") if user_ids else []
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except:
-            return Response({ "status":"error", "body":{}, "message":"Invalid data" })
+            return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response({
-            "status": "success",
             "body": serializer.validated_data,
-            "message":"Streak created successfully"
-        })
+            "detail":"Streak created successfully"
+        }, status=status.HTTP_201_CREATED)
 
 
 class StreakDetailView(APIView):
@@ -51,9 +52,8 @@ class StreakDetailView(APIView):
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         return Response({
-            "status": "success",
             "body": serializer.data,
-            "message":"Streak details retrieved successfully"
+            "detail":"Streak details retrieved successfully"
         })
 
     def patch(self, request, *args, **kwargs):
@@ -62,18 +62,15 @@ class StreakDetailView(APIView):
         try:
             serializer.is_valid(raise_exception=True)
         except:
-            return Response({ "status":"error", "body":{}, "message":"Invalid data" })
+            return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
         return Response({
-            "status": "success",
             "body": serializer.data,
-            "message":"Streak updated successfully"
+            "detail":"Streak updated successfully"
         })
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()
         return Response({
-            "status": "success",
-            "body": {},
-            "message":"Streak deleted successfully"
-        })
+            "detail":"Streak deleted successfully"
+        }, status=status.HTTP_204_NO_CONTENT)

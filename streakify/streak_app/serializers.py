@@ -18,7 +18,7 @@ class StreakListSerializer(serializers.ModelSerializer):
         if obj.streak.created_by:
             serializer = UserSerializer(obj.streak.created_by)
             return serializer.data 
-        return {}
+        return None
 
 
 class StreakCreateSerializer(serializers.ModelSerializer):
@@ -26,9 +26,21 @@ class StreakCreateSerializer(serializers.ModelSerializer):
         model = Streak
         fields = '__all__'
 
-    def create(self, validated_data):
+    def create(self, validated_data, *args, **kwargs):
         request = self.context.get("request")
-        validated_data["created_by"] = request.user 
+        validated_data["created_by"] = request.user
+        
+        user_ids = request.data.pop("user_ids") if "user_ids" in request.data else None
+        user_ids = user_ids.split(",") if user_ids else []
+        for user_id in user_ids:
+            if user_id:
+                try:
+                    user = User.objects.get(id=user_id)
+                except:
+                    serializers 
+                friend = StreakRecord.objects.create( status="pending", server=request.user, client=user )
+                friend.save()
+
         obj = Streak.objects.create(**validated_data)
         obj.save()
         return obj

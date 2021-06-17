@@ -18,4 +18,4 @@ class Friend(TimeStampedModel):
                         related_name="friend_client")
 
     def __str__(self):
-        return "{}:{}".format(self.friend_server, self.friend_client)
+        return "{}:{}".format(self.server, self.client)
