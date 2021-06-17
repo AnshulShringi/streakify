@@ -12,9 +12,9 @@ class Friend(TimeStampedModel):
     )
     status = models.CharField(
         _("Request Status"), choices=STATUS_TYPES, max_length=20)
-    friend_server = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
+    server = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                         related_name="friend_server")
-    friend_client = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
+    client = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                         related_name="friend_client")
 
     def __str__(self):
