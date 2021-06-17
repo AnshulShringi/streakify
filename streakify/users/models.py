@@ -9,9 +9,6 @@ class User(AbstractUser):
     """Default user for Streakify."""
     name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
 
-    def __str__(self):
-        return self.username
-
     @property
     def user_profile(self):
         try:
@@ -23,7 +20,7 @@ class User(AbstractUser):
 
 class UserProfile(StatusMixin, MobileMixin):
     user = models.OneToOneField(
-        "users.User", on_delete=models.CASCADE, blank=False, null=False, related_name="user_info"
+        "users.User", on_delete=models.CASCADE, blank=False, null=False, related_name="user_profile"
     )
     user_image = models.ImageField(_("Profile Pic"), upload_to="user_profile_pic", null=True, blank=True)
 

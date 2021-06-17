@@ -82,7 +82,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     "streakify.core.apps.CoreConfig",
     "streakify.users.apps.UsersConfig",
-    "streakify.streaks.apps.StreaksConfig",
+    "streakify.streak_app.apps.StreakAppConfig",
     "streakify.friends.apps.FriendsConfig",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
