@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from streakify.friends.models import Friend
 from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from streakify.friends.serializers import FriendSerializer
-from streakify.users.models import User
+from streakify.users.models import User, UserProfile
 from rest_framework import status
 
 
@@ -28,6 +28,12 @@ class FriendsAPIView(ListCreateAPIView):
 
     def post(self, request, *args, **kwargs):
         user_ids = request.data.get("user_ids") if "user_ids" in request.data else None
+        mobile_number = request.data.get("mobile_number") if "mobile_number" in request.data else None
+        country_code =  request.data.get("country_code") if "country_code" in request.data else None
+        if mobile_number and country_code:
+            profile = UserProfile.objects.all().filter( mobile_number=mobile_number, country__country_code=country_code )
+            if profile:
+                user_ids = str(profile[0].user.id)
         user_ids = user_ids.split(",") if user_ids else []
         for user_id in user_ids:
             if user_id:
