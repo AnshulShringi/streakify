@@ -13,7 +13,7 @@ class FriendsAPIView(ListCreateAPIView):
     
     def get_queryset(self):
         queryset = self.queryset.filter(server=self.request.user)
-        status = self.request.data.get("status") if "status" in self.request.data else None
+        status = self.request.GET.get("status") if "status" in self.request.GET else 1
         if status:
             queryset = queryset.filter(status=status)
         return queryset.order_by('-created')
@@ -34,9 +34,11 @@ class FriendsAPIView(ListCreateAPIView):
                 try:
                     user = User.objects.get(id=user_id)
                 except:
-                    return Response({ "detail":"Invalid user_ids" }, status=status.HTTP_400_BAD_REQUEST) 
-                friend = Friend.objects.create( status="pending", server=request.user, client=user )
-                friend.save()
+                    return Response({ "detail":"Invalid user_ids" }, status=status.HTTP_400_BAD_REQUEST)
+                query = Friend.objects.all().filter( server=request.user, client=user, status=0 )
+                if not query.exists(): 
+                    friend = Friend.objects.create( server=request.user, client=user, status=0 )
+                    friend.save()
         return Response({ "detail":"Friends added successfully" }, status=status.HTTP_201_CREATED)
 
 
@@ -48,11 +50,13 @@ class FriendRequestUpdateView(UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
+        print(request.data)
         serializer = self.get_serializer( instance, data=request.data, partial=True)
         try:
             serializer.is_valid(raise_exception=True)
         except:
             return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
+        serializer.save()
         return Response({
             "body": serializer.data,
             "message":"Friend status updated successfully"

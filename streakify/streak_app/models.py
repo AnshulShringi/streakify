@@ -4,13 +4,14 @@ from model_utils.models import TimeStampedModel
 from datetime import date
 
 
+class StreakTypeChoices(models.IntegerChoices):
+    Definite = 0
+    Indefinite = 1
+
+
 class Streak(TimeStampedModel):
-    STREAK_TYPES = (
-        ("definite", "definite"),
-        ("indefinite", "indefinite"),
-    )
-    streak_type = models.CharField(
-        _("Type of Streak"), choices=STREAK_TYPES, max_length=50)
+    streak_type = models.IntegerField(
+        _("Type of Streak"), choices=StreakTypeChoices.choices, default=0)
     name = models.CharField(_("Streak Name"), max_length=100)
     max_duration = models.PositiveIntegerField(_("Maximum Duration in days"), null=True, blank=True)
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=True, null=True,
