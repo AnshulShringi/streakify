@@ -26,10 +26,13 @@ class StreakCreateSerializer(serializers.ModelSerializer):
         model = Streak
         fields = '__all__'
 
+    def to_internal_value(self, data):
+        request = self.context.get("request")
+        data["created_by"] = request.user
+        return super().to_internal_value(data)
+
     def create(self, validated_data, *args, **kwargs):
         request = self.context.get("request")
-        validated_data["created_by"] = request.user
-        
         user_ids = request.data.pop("user_ids") if "user_ids" in request.data else None
         user_ids = user_ids.split(",") if user_ids else []
         for user_id in user_ids:

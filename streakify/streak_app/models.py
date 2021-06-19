@@ -14,7 +14,7 @@ class Streak(TimeStampedModel):
         _("Type of Streak"), choices=StreakTypeChoices.choices, default=0)
     name = models.CharField(_("Streak Name"), max_length=100)
     max_duration = models.PositiveIntegerField(_("Maximum Duration in days"), null=True, blank=True)
-    created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=True, null=True,
+    created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                               related_name="streak_user")
 
     def __str__(self):
