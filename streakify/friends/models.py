@@ -12,7 +12,7 @@ class RequestChoices(models.IntegerChoices):
 
 class Friend(TimeStampedModel):
     status = models.IntegerField(
-        _("Request Status"), choices=RequestChoices.choices, max_length=20, default=0)
+        _("Request Status"), choices=RequestChoices.choices, default=0)
     server = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                         related_name="friend_server")
     client = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,

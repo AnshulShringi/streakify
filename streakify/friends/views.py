@@ -14,8 +14,7 @@ class FriendsAPIView(ListCreateAPIView):
     def get_queryset(self):
         queryset = self.queryset.filter(server=self.request.user)
         status = self.request.GET.get("status") if "status" in self.request.GET else 1
-        if status:
-            queryset = queryset.filter(status=status)
+        queryset = queryset.filter(status=status)
         return queryset.order_by('-created')
 
     def get(self, request, *args, **kwargs):

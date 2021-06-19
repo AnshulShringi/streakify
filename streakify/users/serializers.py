@@ -8,7 +8,7 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'name', 'username', 'country_code', 'mobile_number']
+        fields = ['id', 'name', 'country_code', 'mobile_number']
 
     def get_country_code(self, obj):
         profile = UserProfile.objects.filter(user=obj)
