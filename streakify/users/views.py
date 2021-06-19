@@ -29,6 +29,7 @@ class UserProfileView(APIView):
 			serializer.is_valid(raise_exception=True)
 		except:
 			return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
+		serializer.save()
 		return Response({
 			"body": {
 				"name": serializer.data["name"],
