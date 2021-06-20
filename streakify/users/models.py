@@ -7,7 +7,7 @@ from streakify.core.behaviours import StatusMixin, MobileMixin
 
 class User(AbstractUser):
     """Default user for Streakify."""
-    name = models.CharField(_("Name of User"), blank=True, null=True, max_length=255)
+    name = models.CharField(_("Name of User"), blank=True, max_length=255, default="")
 
     @property
     def user_profile(self):

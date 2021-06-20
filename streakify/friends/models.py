@@ -20,3 +20,6 @@ class Friend(TimeStampedModel):
 
     def __str__(self):
         return "{}:{}".format(self.server, self.client)
+
+    class Meta:
+        unique_together = ('server', 'client')
