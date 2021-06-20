@@ -40,10 +40,10 @@ class GetTokenView(APIView):
                 UserProfile.objects.create(user=user, country=country, mobile_number=mobile_number).save()
 
             # Generating token for requesting user
-            refresh_token = RefreshToken.for_user(user)
+            token = RefreshToken.for_user(user)
             body ={}
-            body["refresh_token"] = str(refresh_token)
-            body["access_token"] = str(refresh_token.access_token)
+            body["refresh_token"] = str(token)
+            body["access_token"] = str(token.access_token)
             return Response({ "body": body, "detail": "Logged in successfully"})
         message = "firebase_token, mobile_number and country_code required"
         return Response({ "detail": message }, status=status.HTTP_400_BAD_REQUEST)
