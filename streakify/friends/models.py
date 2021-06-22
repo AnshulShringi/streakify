@@ -14,9 +14,9 @@ class Friend(TimeStampedModel):
     status = models.IntegerField(
         _("Request Status"), choices=RequestChoices.choices, default=0)
     server = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
-                        related_name="friend_server")
+                        related_name="user_friendserver")
     client = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
-                        related_name="friend_client")
+                        related_name="user_friendclient")
 
     def __str__(self):
         return "{}:{}".format(self.server, self.client)

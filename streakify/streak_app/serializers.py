@@ -7,22 +7,49 @@ class StreakRecordSerializer(serializers.ModelSerializer):
     name = serializers.ReadOnlyField(source="streak.name")
     type = serializers.ReadOnlyField(source="streak.type")
     max_duration = serializers.SerializerMethodField()
-    created_by = serializers.PrimaryKeyRelatedField(read_only=True)
-    start_date = serializers.SerializerMethodField()
+    created_by = serializers.ReadOnlyField(source="streak.created_by.id")
+    user_started_from = serializers.SerializerMethodField()
+    streak_started_from = serializers.SerializerMethodField()
 
     class Meta:
         model = StreakRecord
-        fields = ['id', 'streak_id', 'name', 'type', 'max_duration', 'created_by', 'start_date', 'punch_in']
+        fields = ['id', 'streak_id', 'name', 'type', 'max_duration', 'created_by',
+                  'user_started_from', 'streak_started_from', 'punch_in']
 
     def get_max_duration(self, obj):
         if obj.streak.max_duration:
             return obj.streak.max_duration
-        return None
+        return None                  
 
-    def get_start_date(self, obj):
+    def get_user_started_from(self, obj):
         if obj.start_date:
             return obj.start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
-        return ""
+        return None
+
+    def get_streak_started_from(self, obj):
+        if obj.streak.start_date:
+            return obj.streak.start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+        return None
+
+
+class StreakRecordMiniSerializer(serializers.ModelSerializer):
+    start_date = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+    name = serializers.ReadOnlyField(source='participant.name')
+    user_id = serializers.ReadOnlyField(source='participant.id')
+
+    class Meta:
+        model = StreakRecord
+        fields = [ 'user_id', 'name', 'punch_in', 'start_date' ]
+
+
+class StreakDetailSerializer(serializers.ModelSerializer):
+    start_date = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
+    participants = StreakRecordMiniSerializer(source='streak_record', many=True)
+
+    class Meta:
+        model = Streak
+        fields = [ 'id', 'name', 'type', 'max_duration', 'created_by', 'start_date',  'participants']
+
 
 
 class StreakCreateSerializer(serializers.ModelSerializer):

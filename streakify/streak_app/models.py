@@ -15,7 +15,7 @@ class Streak(TimeStampedModel):
     max_duration = models.PositiveIntegerField(_("Maximum Duration in days"), null=True, blank=True)
     start_date = models.DateTimeField(_('Starting From'), default=datetime.now())
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
-                              related_name="streak_user")
+                              related_name="user_streak")
 
     def __str__(self):
         return self.name
@@ -23,9 +23,9 @@ class Streak(TimeStampedModel):
 
 class StreakRecord(TimeStampedModel):
     participant = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
-                              related_name="streak_participant")
+                              related_name="user_record")
     streak =  models.ForeignKey('streak_app.Streak', on_delete=models.CASCADE, blank=False, null=False,
-                              related_name="streak")
+                              related_name="streak_record")
     start_date = models.DateTimeField(_("Starting From"), null=True, blank=True)
     punch_in = models.BooleanField(default=False)
 

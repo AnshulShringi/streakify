@@ -48,7 +48,7 @@ class FriendListSerializer(serializers.ModelSerializer):
     def get_profile_pic(self, obj):
         request = self.context.get('request')
         instance = get_friend_instance(request.user, obj)
-        return instance.user_profile.profile_pic.url if obj.client.user_profile.profile_pic else ""
+        return instance.user_profile.profile_pic.url if instance.user_profile.profile_pic else ""
 
 
 class FriendUpdateSerializer(serializers.ModelSerializer):
