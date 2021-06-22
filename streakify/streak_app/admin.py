@@ -6,7 +6,7 @@ from streakify.streak_app.models import Streak, StreakRecord
 @admin.register(Streak)
 class StreakAdmin(SimpleHistoryAdmin):
     model = Streak
-    list_display = ["id", "name", "streak_type", "max_duration", "created_by"]
+    list_display = ["id", "name", "type", "max_duration","start_date", "created_by"]
     search_fields = ["name"]
 
 

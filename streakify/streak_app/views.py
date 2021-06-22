@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from streakify.streak_app.models import Streak, StreakRecord
-from streakify.streak_app.serializers import StreakCreateSerializer, StreakListSerializer, StreakDetailSerializer
+from streakify.streak_app.serializers import StreakCreateSerializer, StreakRecordSerializer
 from rest_framework.generics import ListAPIView
 from rest_framework import status
 from streakify.users.models import *
@@ -9,7 +9,6 @@ from streakify.users.models import *
 
 class StreakListView(ListAPIView):
     queryset = StreakRecord.objects.all()
-    serializer_class = StreakListSerializer
     
     def get_queryset(self):
         queryset = self.queryset.filter(participant=self.request.user)
@@ -17,35 +16,30 @@ class StreakListView(ListAPIView):
 
     def list(self, request, *args, **kwargs):
         queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
+        serializer = StreakRecordSerializer(queryset, many=True)
         return Response({  
-            "body":serializer.data, 
+            "body":{
+                "streak_records": serializer.data
+            }, 
             "detail":"Data retrieved successfully" 
         })
 
-
-class StreakCreateView(APIView):
-    queryset = Streak.objects.all()
-    serializer_class = StreakCreateSerializer
-    
     def post(self, request, *args, **kwargs):
-        user_ids = request.data.pop("user_ids") if "user_ids" in request.data else None
-        user_ids = user_ids.split(",") if user_ids else []
-        serializer = self.get_serializer(data=request.data)
+        serializer = StreakCreateSerializer(data=request.data, context={'request':request})
         try:
             serializer.is_valid(raise_exception=True)
         except:
             return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         return Response({
-            "body": serializer.validated_data,
+            "body": serializer.data,
             "detail":"Streak created successfully"
         }, status=status.HTTP_201_CREATED)
 
 
 class StreakDetailView(APIView):
     queryset = Streak.objects.all()
-    serializer_class = StreakDetailSerializer
+    serializer_class = StreakRecordSerializer
     lookup_field = 'id'
     
     def get(self, request, *args, **kwargs):
