@@ -36,12 +36,13 @@ class StreakListCreateView(generics.ListCreateAPIView):
             return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
         serializer.save()
         friends_added = []
-        for friend in friends:
-            if Friend.objects.filter(Q(server=request.user, client=friend, status=1) | 
-                                     Q(server=friend, client=request.user, status=1)):
-                record = StreakRecord.objects.create(streak_id=serializer.data["id"], participant_id=friend)
-                record.save()
-                friends_added.append(friend)
+        if friends:
+            for friend in friends:
+                if Friend.objects.filter(Q(server=request.user, client=friend, status=1) | 
+                                        Q(server=friend, client=request.user, status=1)):
+                    record = StreakRecord.objects.create(streak_id=serializer.data["id"], participant_id=friend)
+                    record.save()
+                    friends_added.append(friend)
         return Response({
             "body": {
                 **serializer.data,
