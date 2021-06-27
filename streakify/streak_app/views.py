@@ -101,8 +101,13 @@ class PunchInView(generics.UpdateAPIView):
 
     def patch(self, request, *args, **kwargs):
         instance = self.get_object()
-        if not (instance.punch_in and instance.start_date):
-            instance.start_date = datetime.now()
-        instance.punch_in = True
+        punch_in = request.data.get('punch_in')
+        if punch_in:
+            instance.punch_in = True
+            if not instance.start_date:
+                instance.start_date = datetime.now()
+            instance.save()
+            return Response({ "detail": "Punched in successfully" })    
+        instance.punch_in = False
         instance.save()
-        return Response({ "detail": "Punched in successfully" })
+        return Response({ "detail": "Punched out successfully" })
