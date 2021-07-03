@@ -36,10 +36,16 @@ class StreakRecordMiniSerializer(serializers.ModelSerializer):
     start_date = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
     name = serializers.ReadOnlyField(source='participant.name')
     user_id = serializers.ReadOnlyField(source='participant.id')
+    country_code = serializers.ReadOnlyField(source='participant.user_profile.country.country_code')
+    mobile_number = serializers.ReadOnlyField(source='participant.user_profile.mobile_number')
+    profile_pic = serializers.SerializerMethodField()
 
     class Meta:
         model = StreakRecord
-        fields = [ 'user_id', 'name', 'punch_in', 'start_date' ]
+        fields = [ 'user_id', 'name', 'country_code', 'mobile_number', 'profile_pic', 'punch_in', 'start_date' ]
+
+    def get_profile_pic(self, obj):
+        return obj.participant.user_profile.profile_pic.url if obj.participant.user_profile.profile_pic else ""
 
 
 class StreakDetailSerializer(serializers.ModelSerializer):

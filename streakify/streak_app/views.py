@@ -74,14 +74,15 @@ class StreakDetailView(generics.RetrieveUpdateDestroyAPIView):
         except:
             return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
         
-        for friend in friends_data:
-            record = StreakRecord.objects.filter(streak=instance, participant_id=friend["user_id"])
-            if friend["is_deleted"] and record.exists() and friend["user_id"] != record[0].streak.created_by.id:
-                record.delete()
-            elif not record.exists() and not friend["is_deleted"] and Friend.objects.filter(Q(server=request.user, client_id=friend["user_id"], status=1) | 
-                Q(server_id=friend["user_id"], client=request.user, status=1)):
-                new_record = StreakRecord.objects.create(streak=instance, participant_id=friend["user_id"])
-                new_record.save()    
+        if friends_data:
+            for friend in friends_data:
+                record = StreakRecord.objects.filter(streak=instance, participant_id=friend["user_id"])
+                if friend["is_deleted"] and record.exists() and friend["user_id"] != record[0].streak.created_by.id:
+                    record.delete()
+                elif not record.exists() and not friend["is_deleted"] and Friend.objects.filter(Q(server=request.user, client_id=friend["user_id"], status=1) | 
+                    Q(server_id=friend["user_id"], client=request.user, status=1)):
+                    new_record = StreakRecord.objects.create(streak=instance, participant_id=friend["user_id"])
+                    new_record.save()    
         serializer.save()            
         return Response({
             "detail":"Streak updated successfully"
