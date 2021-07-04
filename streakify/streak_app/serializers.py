@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from streakify.streak_app.models import Streak, StreakRecord
+from django.utils import timezone
 
 
 class StreakRecordSerializer(serializers.ModelSerializer):
@@ -23,12 +24,14 @@ class StreakRecordSerializer(serializers.ModelSerializer):
 
     def get_user_started_from(self, obj):
         if obj.start_date:
-            return obj.start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+            start_date = timezone.localtime(obj.start_date)
+            return start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
         return None
 
     def get_streak_started_from(self, obj):
         if obj.streak.start_date:
-            return obj.streak.start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
+            start_date = timezone.localtime(obj.streak.start_date)
+            return start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
         return None
 
 
