@@ -22,7 +22,7 @@ class UserProfile(StatusMixin, MobileMixin):
     user = models.OneToOneField(
         "users.User", on_delete=models.CASCADE, blank=False, null=False, related_name="user_profile"
     )
-    profile_pic = models.ImageField(_("Profile Pic"), upload_to="user_profile_pic", null=True, blank=True)
+    profile_pic = models.URLField(_("Profile Pic"), max_length=300, blank=True, null=True) 
 
     def __str__(self):
         return str(self.user.username)

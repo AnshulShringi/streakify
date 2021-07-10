@@ -26,7 +26,7 @@ class UserProfileView(APIView):
 			"body": {
 				"name": serializer.data["name"],
 				"email": serializer.data["email"],
-				"profile_pic": request.user.user_profile.profile_pic.url if request.user.user_profile.profile_pic else None  
+				"profile_pic": request.user.user_profile.profile_pic if request.user.user_profile.profile_pic else None  
 			},
 			"detail":"User updated successfully"
 		})

@@ -17,6 +17,8 @@ class Streak(TimeStampedModel):
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                               related_name="user_streak")
 
+    streak_image = models.URLField(_("Streak Image"), max_length=300, blank=True, null=True) 
+
     def __str__(self):
         return self.name
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from streakify.core.models import Country
+from streakify.core.models import Country, ImageModel
 
 
 @admin.register(Country)

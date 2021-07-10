@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from streakify.users.models import User, UserProfile
+from streakify.users.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -13,13 +13,11 @@ class UserSerializer(serializers.ModelSerializer):
 
     def get_profile_pic(self, obj):
         if obj.user_profile.profile_pic:
-            return obj.user_profile.profile_pic.url
-        return ""
+            return obj.user_profile.profile_pic
+        return None
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
-    profile_pic = serializers.FileField(required=False)
-    
+class UserUpdateSerializer(serializers.ModelSerializer):  
     class Meta:
         model = User
         fields = [ 'name', 'email', 'profile_pic' ]

@@ -23,6 +23,7 @@ urlpatterns = [
     path("accounts/", include("allauth.urls")),
     
     # Custom urls
+    path("api/v1/core/", include("streakify.core.urls", namespace="streakify_core")),
     path("api/v1/auth/", include("streakify.auth.urls", namespace="streakify_auth")),
     path("api/v1/streaks/", include("streakify.streak_app.urls", namespace="streak_app")),
     path("api/v1/friends/", include("streakify.friends.urls", namespace="friends")),

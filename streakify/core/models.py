@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
-from streakify.core.behaviours import SlugMixin
+from streakify.core.behaviours import SlugMixin, StatusMixin
+from model_utils.models import TimeStampedModel
 from django.core.validators import RegexValidator
 from streakify.core.validators import validator_ascii
 
@@ -25,3 +26,10 @@ class Country(SlugMixin):
 
     def __str__(self):
         return str(self.country_code)
+
+
+class ImageModel(StatusMixin, TimeStampedModel):
+    image = models.ImageField(_("Image"), upload_to="images")
+    
+    def __str__(self):
+        return str(self.id)

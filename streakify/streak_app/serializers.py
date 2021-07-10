@@ -6,6 +6,7 @@ from django.utils import timezone
 class StreakRecordSerializer(serializers.ModelSerializer):
     streak_id = serializers.ReadOnlyField(source="streak.id")
     name = serializers.ReadOnlyField(source="streak.name")
+    streak_image = serializers.SerializerMethodField()
     type = serializers.ReadOnlyField(source="streak.type")
     max_duration = serializers.SerializerMethodField()
     created_by = serializers.ReadOnlyField(source="streak.created_by.id")
@@ -14,7 +15,7 @@ class StreakRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = StreakRecord
-        fields = ['id', 'streak_id', 'name', 'type', 'max_duration', 'created_by',
+        fields = ['id', 'streak_id', 'name', 'streak_image',  'type', 'max_duration', 'created_by',
                   'user_started_from', 'streak_started_from', 'punch_in']
 
     def get_max_duration(self, obj):
@@ -34,6 +35,11 @@ class StreakRecordSerializer(serializers.ModelSerializer):
             return start_date.strftime("%Y-%m-%dT%H:%M:%SZ")
         return None
 
+    def get_streak_image(self, obj):
+        if obj.streak.streak_image:
+            return obj.streak.streak_image
+        return None
+
 
 class StreakRecordMiniSerializer(serializers.ModelSerializer):
     start_date = serializers.DateTimeField(format="%Y-%m-%dT%H:%M:%SZ")
@@ -48,7 +54,7 @@ class StreakRecordMiniSerializer(serializers.ModelSerializer):
         fields = [ 'user_id', 'name', 'country_code', 'mobile_number', 'profile_pic', 'punch_in', 'start_date' ]
 
     def get_profile_pic(self, obj):
-        return obj.participant.user_profile.profile_pic.url if obj.participant.user_profile.profile_pic else ""
+        return obj.participant.user_profile.profile_pic if obj.participant.user_profile.profile_pic else None
 
 
 class StreakDetailSerializer(serializers.ModelSerializer):
@@ -57,7 +63,7 @@ class StreakDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Streak
-        fields = [ 'id', 'name', 'type', 'max_duration', 'created_by', 'start_date',  'participants']
+        fields = [ 'id', 'name', 'streak_image', 'type', 'max_duration', 'created_by', 'start_date',  'participants']
 
 
 
@@ -66,7 +72,7 @@ class StreakCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Streak
-        fields = ['id', 'name', 'type', 'max_duration', 'start_date', 'created_by']
+        fields = ['id', 'name', 'streak_image', 'type', 'max_duration', 'start_date', 'created_by']
 
     def to_internal_value(self, data):
         request = self.context.get("request")
