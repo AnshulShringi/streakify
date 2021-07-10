@@ -9,26 +9,9 @@ class UserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ['id', 'name', 'email', 'country_code', 'mobile_number', 'profile_pic']
+        fields = ['id', 'country_code', 'mobile_number', 'name', 'email', 'profile_pic']
 
     def get_profile_pic(self, obj):
         if obj.user_profile.profile_pic:
             return obj.user_profile.profile_pic
         return None
-
-
-class UserUpdateSerializer(serializers.ModelSerializer):  
-    class Meta:
-        model = User
-        fields = [ 'name', 'email', 'profile_pic' ]
-
-    def update(self, instance, validated_data):
-        profile_pic = validated_data.pop('profile_pic') if 'profile_pic' in validated_data else None
-        instance.email = validated_data.get('email', instance.email)
-        instance.name = validated_data.get('name', instance.name)
-        instance.save()
-        if profile_pic:
-            profile = instance.user_profile
-            profile.profile_pic = profile_pic
-            profile.save()
-        return instance

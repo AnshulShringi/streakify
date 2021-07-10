@@ -1,12 +1,11 @@
 from django.utils.translation import gettext_lazy as _
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from streakify.users.serializers import UserSerializer, UserUpdateSerializer
+from streakify.users.serializers import UserSerializer
 from rest_framework import status
 
 
 class UserProfileView(APIView):
-
 	def get(self, request, *args, **kwargs):
 		instance = request.user
 		serializer = UserSerializer(instance)
@@ -16,20 +15,19 @@ class UserProfileView(APIView):
 		})
 
 	def patch(self, request, *args, **kwargs):
-		serializer = UserUpdateSerializer( request.user, data=request.data, partial=True)
-		try:
-			serializer.is_valid(raise_exception=True)
-		except:
-			return Response({ "detail":"Invalid data" }, status=status.HTTP_400_BAD_REQUEST)
-		serializer.save()
-		return Response({
-			"body": {
-				"name": serializer.data["name"],
-				"email": serializer.data["email"],
-				"profile_pic": request.user.user_profile.profile_pic if request.user.user_profile.profile_pic else None  
-			},
-			"detail":"User updated successfully"
-		})
+		profile_pic = request.data.get('profile_pic')
+		serializer = UserSerializer( request.user, data=request.data, partial=True)
+		if serializer.is_valid():
+			if profile_pic:
+				profile = request.user.user_profile
+				profile.profile_pic = profile_pic
+				profile.save()
+			serializer.save()
+			return Response({
+				"body": serializer.data,
+				"detail":"User updated successfully"
+			})
+		return Response({ "detail": serializer.errors }, status=status.HTTP_400_BAD_REQUEST)
 
 
 class TestView(APIView):
