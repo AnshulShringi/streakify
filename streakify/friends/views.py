@@ -17,6 +17,7 @@ def send_notification(message, user):
                 title = message["title"],
                 body = message["body"]),
             token = device_token)
+        messaging.send(message)
     except:
         pass
 
