@@ -6,6 +6,7 @@ from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from streakify.core.serializers import ImageUploadSerializer
 from rest_framework import generics
 import environ
+from rest_framework.permissions import AllowAny 
 
 
 env = environ.Env()
@@ -26,6 +27,8 @@ class ImageUploadView(generics.CreateAPIView):
 
 
 class UpdateCheckerView(APIView):
+    permission_classes = [AllowAny,]
+
     def post(self, request, *args, **kwargs):
         data = {}
         version_code = request.data.get("version_code", 0)
