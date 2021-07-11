@@ -28,13 +28,13 @@ class ImageUploadView(generics.CreateAPIView):
 class UpdateCheckerView(APIView):
     def post(self, request, *args, **kwargs):
         data = {}
-        version_code = request.data.get("version_code")
-        current_version = env("VERSION")
+        version_code = request.data.get("version_code", 0)
+        current_version = env("VERSION", default=0)
         data["update_type"] = env("UPDATE_TYPE", default=1)
         data["action_url"] = env("ACTION_URL", default="")
         data["update_available"] = True
         
-        if version_code and version_code == current_version:
+        if version_code and version_code < current_version:
             data["update_available"] = False 
         
         return Response({
