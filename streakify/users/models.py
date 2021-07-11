@@ -23,6 +23,7 @@ class UserProfile(StatusMixin, MobileMixin):
         "users.User", on_delete=models.CASCADE, blank=False, null=False, related_name="user_profile"
     )
     profile_pic = models.URLField(_("Profile Pic"), max_length=300, blank=True, null=True) 
+    device_token = models.CharField(_("Device Message Token"), max_length=300, blank=True, null=True)
 
     def __str__(self):
         return str(self.user.username)

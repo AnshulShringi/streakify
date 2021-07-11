@@ -49,8 +49,3 @@ class FriendListSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         instance = get_friend_instance(request.user, obj)
         return instance.user_profile.profile_pic if instance.user_profile.profile_pic else None
-
-
-class FriendUpdateSerializer(serializers.ModelSerializer):
-    class Meta:
-        fields = ['status',]

@@ -16,12 +16,15 @@ class UserProfileView(APIView):
 
 	def patch(self, request, *args, **kwargs):
 		profile_pic = request.data.get('profile_pic')
+		device_token = request.data.get('device_token')
 		serializer = UserSerializer( request.user, data=request.data, partial=True)
 		if serializer.is_valid():
+			profile = request.user.user_profile
 			if profile_pic:
-				profile = request.user.user_profile
 				profile.profile_pic = profile_pic
-				profile.save()
+			if device_token:
+				profile.device_token = device_token
+			profile.save()
 			serializer.save()
 			return Response({
 				"body": serializer.data,

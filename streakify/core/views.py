@@ -5,7 +5,10 @@ from rest_framework import serializers, status
 from rest_framework.parsers import FormParser, JSONParser, MultiPartParser
 from streakify.core.serializers import ImageUploadSerializer
 from rest_framework import generics
+import environ
 
+
+env = environ.Env()
 
 class ImageUploadView(generics.CreateAPIView):
     serializer_class = ImageUploadSerializer
@@ -20,3 +23,21 @@ class ImageUploadView(generics.CreateAPIView):
                 "detail":"Image uploaded successfully"
             })
         return Response({"detail": "Invalid data"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UpdateCheckerView(APIView):
+    def post(self, request, *args, **kwargs):
+        data = {}
+        version_code = request.data.get("version_code")
+        current_version = env("VERSION")
+        data["update_type"] = env("UPDATE_TYPE", default=1)
+        data["action_url"] = env("ACTION_URL", default="")
+        data["update_available"] = True
+        
+        if version_code and version_code == current_version:
+            data["update_available"] = False 
+        
+        return Response({
+            "detail": "Fetched successfully",
+            "body": data
+        })
