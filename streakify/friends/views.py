@@ -90,5 +90,5 @@ class FriendRequestUpdateView(UpdateAPIView):
                                                             Q(participant=user2, streak__created_by=user1))
                 streak_record.delete()
                 instance.delete()
-                return Response({"message":"Friend request rejected/Friend removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+                return Response({"message":"Friend request rejected/Friend removed successfully"})
         return Response({ "detail":"Invalid request" }, status=status.HTTP_400_BAD_REQUEST)
