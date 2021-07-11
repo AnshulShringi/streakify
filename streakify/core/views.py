@@ -34,7 +34,7 @@ class UpdateCheckerView(APIView):
         data["action_url"] = env("ACTION_URL", default="")
         data["update_available"] = True
         
-        if version_code and version_code < current_version:
+        if version_code and version_code == current_version:
             data["update_available"] = False 
         
         return Response({

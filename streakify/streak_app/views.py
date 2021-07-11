@@ -91,9 +91,7 @@ class StreakDetailView(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
         instance.delete()
-        return Response({
-            "detail":"Streak deleted successfully"
-        }, status=status.HTTP_204_NO_CONTENT)
+        return Response({"detail":"Streak deleted successfully"})
 
 
 class PunchInView(generics.UpdateAPIView):
