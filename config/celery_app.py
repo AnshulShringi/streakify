@@ -24,6 +24,6 @@ def debug_task(self):
 app.conf.beat_schedule = {
     'update-punch-in': {
         'task': 'streakify.streak_app.tasks.update_punch_in',
-        'schedule': crontab(hour=0, minute=0),
+        'schedule': crontab(hour=0, minute=1),
     },
 }
