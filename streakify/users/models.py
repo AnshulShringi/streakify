@@ -1,29 +1,50 @@
-# Django imports
+# Core Django Imports
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-from streakify.core.behaviours import StatusMixin, MobileMixin
+
+# Third-party app imports
+from model_utils.models import TimeStampedModel
+
+# Local Imports
+from streakify.core.behaviours import StatusMixin
+from streakify.core.validators import (
+    validator_ascii,
+    validator_country_code,
+    validator_mobile_no,
+)
 
 
-class User(AbstractUser):
+class User(AbstractUser, StatusMixin, TimeStampedModel):
     """Default user for Streakify."""
-    name = models.CharField(_("Name of User"), blank=True, max_length=255, default="")
 
-    @property
-    def user_profile(self):
-        try:
-            return UserProfile.objects.get(user=self)
-        except UserProfile.DoesNotExist:
-            return None
-
-
-
-class UserProfile(StatusMixin, MobileMixin):
-    user = models.OneToOneField(
-        "users.User", on_delete=models.CASCADE, blank=False, null=False, related_name="user_profile"
+    name = models.CharField(
+        _("name"),
+        max_length=100,
+        blank=True,
+        null=True,
+        validators=[validator_ascii],
+        help_text="The length of this field can't be longer than 100",
     )
-    profile_pic = models.URLField(_("Profile Pic"), max_length=300, blank=True, null=True) 
-    device_token = models.CharField(_("Device Message Token"), max_length=300, blank=True, null=True)
+    country_code = models.CharField(
+        _("Country Code"),
+        max_length=5,
+        blank=True,
+        null=True,
+        validators=[validator_country_code],
+        help_text="Enter a valid country code",
+    )
+    mobile_number = models.CharField(
+        _("Mobile Number"),
+        max_length=10,
+        blank=True,
+        null=True,
+        validators=[validator_mobile_no],
+        help_text="Enter a valid 10 digit mobile number.",
+    )
+    profile_pic = models.URLField(_("Profile Pic"), max_length=300, blank=True, null=True)
+    device_id = models.CharField(_("Device ID"), max_length=300, blank=True, null=True)
+    is_verified = models.BooleanField(_("is verified"), default=False)
 
-    def __str__(self):
-        return str(self.user.username)
+    first_name = None
+    last_name = None
