@@ -1,9 +1,13 @@
+# Core Django Imports
 from django.contrib import admin
-from streakify.core.models import Country, ImageModel
+
+# Third-party app imports
+from import_export.admin import ImportExportModelAdmin
+
+# Local imports
+from .models import ImageModel
 
 
-@admin.register(Country)
-class CountryAdmin(admin.ModelAdmin):
-    model = Country
-    list_display = ["id", "name", "country_code"]
-    search_fields = list_display
+@admin.register(ImageModel)
+class ImageAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    list_display = ["id"]
