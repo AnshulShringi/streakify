@@ -13,11 +13,11 @@ class Streak(TimeStampedModel):
     type = models.IntegerField(_("Type of Streak"), choices=StreakTypeChoices.choices, default=0)
     name = models.CharField(_("Streak Name"), max_length=100)
     max_duration = models.PositiveIntegerField(_("Maximum Duration in days"), null=True, blank=True)
-    start_date = models.DateTimeField(_('Starting From'), default=datetime.now)
+    start_date = models.DateTimeField(_('Starting From'), default=datetime.utcnow)
     created_by = models.ForeignKey('users.User', on_delete=models.CASCADE, blank=False, null=False,
                               related_name="user_streak")
 
-    streak_image = models.URLField(_("Streak Image"), max_length=300, blank=True, null=True) 
+    streak_image = models.URLField(_("Streak Image"), max_length=300, blank=True, null=True)
 
     def __str__(self):
         return self.name

@@ -1,0 +1,28 @@
+version: "3"
+services:
+  db-local:
+    container_name: streakify_db
+    image: 'postgres'
+    ports:
+    - '5432:5432'
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: streakify
+    volumes:
+    - 'database:/var/lib/postgresql'
+  redis:
+    container_name: streakify_redis
+    image: 'redis:alpine'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - REDIS_PORT_NUMBER=6379
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'redis:/data'
+volumes:
+  database:
+  redis:
+networks:
+  streakify-network:
+    driver: bridge
