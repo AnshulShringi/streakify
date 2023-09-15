@@ -270,5 +270,4 @@ tags
 streakify/media/
 
 .pytest_cache/
-
-
+.idea/
