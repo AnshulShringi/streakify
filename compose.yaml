@@ -1,0 +1,66 @@
+version: "1"
+services:
+  streakify_db:
+    image: postgres:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "mypassword"
+      POSTGRES_DB: "streakify"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -q -d streakify -U postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    volumes:
+      - streakify-data:/var/lib/postgres/data
+    networks:
+      - streakify-network
+
+  streakify_rabbitmq:
+    image: rabbitmq:3.8-alpine
+    ports:
+      - 5672:5672
+    healthcheck:
+      test: [ "CMD-SHELL", "rabbitmqctl status" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    environment:
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "mypassword"
+    networks:
+      - streakify-network
+
+  app:
+    image: python:3.8-slim
+    command: sh -c
+      "apt-get update
+      && apt-get install build-essential libssl-dev libffi-dev python3-dev libpq-dev -y
+      && pip3 install psycopg2-binary
+      && pip3 install django-extensions
+      && pip3 install django-debug-toolbar
+      && pip3 install -r requirements/production.txt
+      && python3 manage.py migrate
+      && python3 manage.py runserver 0.0.0.0:8000"
+    ports:
+      - 8000:8000
+    working_dir: /app
+    volumes:
+      - ./:/app
+    env_file:
+      - variables.env
+    depends_on:
+      streakify_rabbitmq:
+        condition: "service_healthy"
+      streakify_db:
+        condition: "service_healthy"
+    networks:
+      - streakify-network
+
+volumes:
+  streakify-data:
+
+networks:
+    streakify-network:
